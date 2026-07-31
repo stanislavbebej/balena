@@ -1,0 +1,31 @@
+version: '2'
+
+volumes:
+  pihole_config: {}
+
+services:
+  hostname:
+    environment:
+      SET_HOSTNAME: rpi-pihole
+    image: bh.cr/g_tomas_migone1/hostname-rpi
+    labels:
+      io.balena.features.supervisor-api: '1'
+    restart: 'no'
+
+  pihole:
+    build: pihole
+    cap_add:
+      - SYS_TIME
+      - SYS_NICE
+    depends_on:
+      - hostname
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    network_mode: host
+    tmpfs:
+      - /tmp
+      - /run
+      - /var/log/pihole
+    volumes:
+      - pihole_config:/etc/pihole
