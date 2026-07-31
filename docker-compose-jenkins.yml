@@ -1,0 +1,28 @@
+version: '2'
+volumes:
+  jenkins_home: {}
+
+services:
+  jenkins-server:
+    build: jenkins
+    # environment:
+    #   JAVA_OPTS: >-
+    #     -Djenkins.install.runSetupWizard=false
+    ports:
+      - 80:8080
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  jenkins-agent:
+    build: jenkins-agent
+    depends_on:
+      - jenkins-server
+    environment:
+      REMOTING_OPTS: >-
+        -url http://jenkins-server:8080/
+        -secret $X_AGENT_SECRET
+        -name zuberec
+        -webSocket
+        -workDir /home/jenkins/agent
+    tmpfs:
+      - /home/jenkins/agent:mode=770,uid=1000,gid=0

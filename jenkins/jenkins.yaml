@@ -1,0 +1,75 @@
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+        - usernamePassword:
+            description: "Personal Access Token for GitHub code checkout"
+            id: "github-access-token"
+            password: "${X_GITHUB_PAT}"
+            scope: GLOBAL
+            username: "github-access-token"
+jenkins:
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  labelAtoms:
+    - name: "built-in"
+    - name: "linux"
+    - name: "zuberec"
+  noUsageStatistics: true
+  nodes:
+    - permanent:
+        labelString: "linux zuberec"
+        launcher:
+          inbound:
+            workDirSettings:
+              disabled: false
+              failIfWorkDirIsMissing: false
+              internalDir: "remoting"
+        mode: EXCLUSIVE
+        name: "zuberec"
+        numExecutors: 2
+        remoteFS: "/home/jenkins/agent"
+        retentionStrategy: "always"
+  numExecutors: 0
+  slaveAgentPort: -1
+appearance:
+  locale:
+    systemLocale: "sk"
+  themeManager:
+    theme: "darkSystem"
+security:
+  scriptApproval:
+    forceSandbox: true
+unclassified:
+  globalDefaultFlowDurabilityLevel:
+    durabilityHint: PERFORMANCE_OPTIMIZED
+  location:
+    adminAddress: "stanislav.bebej@gmail.com"
+tool:
+  git:
+    installations:
+      - home: "git"
+        name: "Default"
+      - name: "jgit"
+
+jobs:
+  - file: /jcasc/backup-medicom.groovy
+
+  # - script: >
+  #     pipelineJob('backup-medicom') {
+  #       definition {
+  #         cpsScm {
+  #           scm {
+  #             git {
+  #               remote {
+  #                 github('stanislavbebej/balena')
+  #                 credentials('github-access-token')
+  #               }
+  #               branches('devel', 'main')
+  #             }
+  #           }
+  #         }
+  #       }
+  #       displayName('Zaloha Medicom')
+  #     }
