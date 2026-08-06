@@ -5,7 +5,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh \
     && apk add nfs-utils openrc --no-cache \
     && rc-update add nfs \
-    && echo "/nfs *(ro,no_subtree_check,insecure,all_squash,fsid=root)" >>/etc/exports
+    && echo "/nfs 192.168.1.18/32(rw,sync,nohide,no_subtree_check,insecure_locks,insecure,all_squash,fsid=root,anonuid=0,anongid=0)" >>/etc/exports
 
 ENTRYPOINT ["/entrypoint.sh"]
 
