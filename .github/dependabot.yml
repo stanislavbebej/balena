@@ -2,23 +2,20 @@ version: 2
 
 updates:
   - package-ecosystem: docker
-    directory: /
+    directories:
+      - /jenkins
+      - /jenkins-agent
+      - /kali
+      - /nfs-server
+      - /pihole
+      - /secrets-manager
+      - /transmission
+      - /workstation
     schedule:
       interval: monthly
     commit-message:
       prefix: fix(deps)
     groups:
       docker-deps:
-        patterns:
-          - "*"
-
-  - package-ecosystem: docker-compose
-    directory: /
-    schedule:
-      interval: monthly
-    commit-message:
-      prefix: fix(deps)
-    groups:
-      docker-compose-deps:
         patterns:
           - "*"
