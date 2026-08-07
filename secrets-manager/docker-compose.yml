@@ -10,7 +10,7 @@ volumes:
 
 services:
   secrets-manager:
-    build: secrets-manager
+    build: .
     environment:
       SECRETS_YML: |
         summon.files:
@@ -18,6 +18,7 @@ services:
             format: json
             overwrite: true
             secrets:
+              DUMMY_PLAINTEXT: "https://github.com/stanislavbebej-ext43345/summon-secrets-manager/tree/main"
               DUMMY_SECRET: !var acd2d25f-1fd2-4604-9a6e-b2a600f71a31
     volumes:
       - secrets:/secrets
