@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.568.1-lts-alpine
+FROM jenkins/jenkins:2.568.2-lts-alpine
 
 COPY --chown=jenkins:root plugins.txt /usr/share/jenkins/ref/plugins.txt
 
