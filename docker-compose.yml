@@ -2,75 +2,19 @@
 version: '2'
 
 volumes:
-  downloads: {}
-  secrets:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      o: size=1M
-      device: tmpfs
-  transmission_config: {}
-  transmission_downloads: {}
+  caddy_data:
+  caddy_config:
 
 services:
-  secrets-manager:
-    image: bh.cr/g_stanislav_bebej/secrets-manager
-    environment:
-      SECRETS_YML: |
-        summon.files:
-          - path: /secrets/default.json
-            format: json
-            overwrite: true
-            permissions: 0640
-            secrets:
-              DUMMY_SECRET: !var acd2d25f-1fd2-4604-9a6e-b2a600f71a31
-    volumes:
-      - secrets:/secrets
-
-  linux:
-    build: workstation
-    depends_on:
-      - secrets-manager
-    tmpfs:
-      - /tmp
-    volumes:
-      - downloads:/downloads
-      - secrets:/secrets:ro
-
-  transmission:
-    build: transmission
+  caddy:
+    image: caddy:2.11.4-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
     ports:
-      - '80:9091'
-      - '51413:51413'
-      - '51413:51413/udp'
-    tmpfs:
-      - /watch
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
     volumes:
-      - transmission_config:/config
-      - transmission_downloads:/downloads
-
-  # nfs-transmission:
-  #   build: nfs-server
-  #   depends_on:
-  #     - transmission
-  #   labels:
-  #     io.balena.features.kernel-modules: '1'
-  #     io.balena.features.procfs: '1'
-  #     io.balena.features.sysfs: '1'
-  #   network_mode: host
-  #   privileged: true
-  #   volumes:
-  #     - transmission_downloads:/nfs
-
-  samba:
-    # https://github.com/dockur/samba
-    image: dockurr/samba:4.23.10@sha256:404f91bdf317d390241a41165579cd25199f34171b44677d877c75dc40184042
-    environment:
-      NAME: Shared
-      USER: samba
-      PASS: secret
-      GID: 0
-    ports:
-      - 445:445
-    volumes:
-      - transmission_downloads:/shared
+      - caddy_data:/data
+      - caddy_config:/config
