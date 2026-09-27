@@ -1,3 +1,3 @@
-FROM linuxserver/transmission:4.1.3@sha256:30d59b253993df8c7634fe03cbb33e22324d00d200ff3d3cc30e6184fa55f96b
+FROM linuxserver/transmission:4.1.3@sha256:1a12fef3c89eca48b7be9e7d36b17b4eb4e1bcf5e1ee7fbf372e3a38b562939d
 
 COPY settings.json /defaults/settings.json
