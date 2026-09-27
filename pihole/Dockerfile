@@ -1,4 +1,4 @@
-FROM pihole/pihole:2026.07.2@sha256:f7d1be836e3bc608b56d82fc9904f5a831cdfbc0dc9c6d58f94e4c985c70038b
+FROM pihole/pihole:2026.09.0@sha256:5b9c8cf51de7d6d3f2240dbe72baf5f06e1fd39cb4d77a99fab4fa13e23bd1be
 
 ENV FTLCONF_dns_listeningMode='ALL'
 ENV FTLCONF_dns_upstreams='8.8.8.8;208.67.222.222;1.1.1.1'
