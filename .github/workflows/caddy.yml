@@ -1,0 +1,22 @@
+name: Fleet devel-32
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - caddy/**
+      - docker-compose-caddy.yml
+      - secrets-manager/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    secrets: inherit
+    uses: $/.github/workflows/deploy.yml
+    with:
+      fleet: devel-32
+      project: caddy
