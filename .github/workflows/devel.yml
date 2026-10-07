@@ -1,0 +1,22 @@
+name: Fleet devel
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docker-compose-workstation.yml
+      - transmission/**
+      - workstation/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    secrets: inherit
+    uses: $/.github/workflows/deploy.yml
+    with:
+      fleet: devel
+      project: workstation

@@ -1,0 +1,21 @@
+name: Fleet jenkins
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docker-compose-jenkins.yml
+      - jenkins*/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    secrets: inherit
+    uses: $/.github/workflows/deploy.yml
+    with:
+      fleet: jenkins
+      project: jenkins

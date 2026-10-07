@@ -1,0 +1,53 @@
+name: Balena deploy
+
+on:
+  workflow_call:
+    inputs:
+      fleet:
+        description: BalenaCloud fleet name
+        required: true
+        type: string
+      project:
+        description: Project name
+        required: true
+        type: string
+
+concurrency: cd-${{ github.workflow }}-${{ inputs.fleet }}
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: ${{ inputs.project }} to ${{ inputs.fleet }}
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Balena CLI
+        run: |
+          # Install Balena CLI
+          wget -nv -O - https://github.com/balena-io/balena-cli/releases/download/v${VERSION}/balena-cli-v${VERSION}-linux-x64-standalone.tar.gz | tar -zxf - -C $HOME
+          echo "$HOME/balena/bin" >>$GITHUB_PATH
+        env:
+          VERSION: ${{ vars.BALENA_CLI_VERSION || '25.2.6' }}
+
+      - name: Balena login
+        run: |
+          # Balena login
+          balena login --token "$BALENA_API_KEY"
+        env:
+          BALENA_API_KEY: ${{ secrets.BALENA_API_KEY }}
+
+      - name: Balena push
+        run: |
+          # Balena push
+          if [[ ! -f docker-compose.yml ]]; then
+            ln -s docker-compose-${PROJECT}.yml docker-compose.yml
+          fi
+          balena push "$FLEET" --nocache
+        env:
+          FLEET: ${{ inputs.fleet }}
+          PROJECT: ${{ inputs.project }}

@@ -1,0 +1,21 @@
+name: Fleet pihole
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docker-compose-pihole.yml
+      - pihole/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    secrets: inherit
+    uses: $/.github/workflows/deploy.yml
+    with:
+      fleet: pihole
+      project: pihole

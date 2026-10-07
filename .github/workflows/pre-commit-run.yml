@@ -1,0 +1,58 @@
+name: Pre-commit run
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches-ignore:
+      - pre-commit-run/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run:
+    name: Pre-commit check
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Evaluate branch name
+        id: ref
+        run: echo "name=${REF##refs/heads/}" >>$GITHUB_OUTPUT
+        env:
+          REF: ${{ github.head_ref || github.ref }}
+
+      # Setup pre-commit
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Add cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('**/.pre-commit-config.yaml') }}
+
+      - name: Initialize pre-commit
+        run: pre-commit install
+
+      - name: Check
+        run: pre-commit run --all-files
+
+      # Create PR if needed
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        if: always()
+        with:
+          title: "chore(pre-commit): auto-format code on ${{ steps.ref.outputs.name }}"
+          commit-message: "chore(pre-commit): auto-format code"
+          body: Reformat code according to pre-defined rules
+          branch: pre-commit-run/${{ steps.ref.outputs.name }}
+          base: ${{ steps.ref.outputs.name }}
+          delete-branch: true
+          labels: bot
