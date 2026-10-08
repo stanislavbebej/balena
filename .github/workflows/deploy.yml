@@ -44,9 +44,14 @@ jobs:
       - name: Balena push
         run: |
           # Balena push
+          if [[ ! -f docker-compose-${PROJECT}.yml ]]; then
+            cd $PROJECT
+          fi
+
           if [[ ! -f docker-compose.yml ]]; then
             ln -s docker-compose-${PROJECT}.yml docker-compose.yml
           fi
+
           balena push "$FLEET" --nocache
         env:
           FLEET: ${{ inputs.fleet }}
