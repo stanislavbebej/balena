@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  run:
+  deploy:
     secrets: inherit
     uses: $/.github/workflows/deploy.yml
     with:
