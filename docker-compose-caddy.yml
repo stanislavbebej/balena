@@ -13,8 +13,7 @@ volumes:
 
 services:
   secrets-manager:
-    # image: bh.cr/g_stanislav_bebej/secrets-manager
-    build: secrets-manager
+    image: bh.cr/g_stanislav_bebej/secrets-manager
     environment:
       SECRETS_YML: |
         summon.files:
