@@ -9,7 +9,6 @@ updates:
       - /kali
       - /nfs-server
       - /pihole
-      - /secrets-manager
       - /transmission
       - /workstation
     schedule:
