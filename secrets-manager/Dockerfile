@@ -1,3 +1,4 @@
+# Dockerfile.raspberry-pi
 FROM golang:1.27-alpine AS builder
 
 ARG SUMMON_REPO=https://github.com/cyberark/summon.git
